@@ -61,69 +61,51 @@ class AndroidEclipsePlugin implements Plugin<Project> {
                 }
             }
         };
-        eclipse.project {
+        project.eclipse.project.natures += 'com.android.ide.eclipse.adt.AndroidNature';
+        project.eclipse.project.natures += 'org.springsource.ide.eclipse.gradle.core.nature';
+        project.eclipse.project.natures += 'org.eclipse.jdt.core.javanature';
+        project.eclipse.project.natures += 'org.eclipse.jdt.groovy.core.groovyNature';
+        project.eclipse.project.buildCommand += 'com.android.ide.eclipse.adt.ResourceManagerBuilder';
+        project.eclipse.project.buildCommand += 'com.android.ide.eclipse.adt.PreCompilerBuilder';
+        project.eclipse.project.buildCommand += 'org.eclipse.jdt.core.javabuilder';
+        project.eclipse.project.buildCommand += 'com.android.ide.eclipse.adt.ApkBuilder';
 
-            natures 'com.android.ide.eclipse.adt.AndroidNature',
-                    'org.springsource.ide.eclipse.gradle.core.nature',
-                    'org.eclipse.jdt.core.javanature',
-                    'org.eclipse.jdt.groovy.core.groovyNature'
 
-            buildCommand 'com.android.ide.eclipse.adt.ResourceManagerBuilder'
-            buildCommand 'com.android.ide.eclipse.adt.PreCompilerBuilder'
-            buildCommand 'org.eclipse.jdt.core.javabuilder'
-            buildCommand 'com.android.ide.eclipse.adt.ApkBuilder'
+        project.sourceSets.main.java.srcDir = 'gen';
 
-        };
-        project.sourceSets {
-            main { java { srcDir 'gen' } }
-        };
-
-        project.android {
-
-            defaultConfig {
-                versionName = project.version
-            }
-
-            sourceSets {
-                main {
-                    manifest.srcFile 'AndroidManifest.xml'
-                    java.srcDirs = ['src/main/java']
-                    resources.srcDirs = ['src/main/resources']
-                    res.srcDirs = ['res']
-                    assets.srcDirs = ['assets']
-                }
-
-                test.setRoot('tests')
-                test {
-                    java.srcDirs = ['tests/src']
-                    res.srcDirs = ['tests/res']
-                    assets.srcDirs = ['tests/assets']
-                    resources.srcDirs = ['tests/src']
-                }
-
-                instrumentTest.setRoot('tests')
-                instrumentTest {
-                    java.srcDirs = ['tests/src']
-                    res.srcDirs = ['tests/res']
-                    assets.srcDirs = ['tests/assets']
-                    resources.srcDirs = ['tests/src']
-                }
-            }
-
-            buildTypes {
-                release {
-                    runProguard false
-                    //proguardFile getDefaultProguardFile('proguard-android.txt')
-                    proguardFile 'proguard-project.txt'
-                    signingConfig signingConfigs.release
-                }
-            }
-
-            packagingOptions { exclude 'META-INF/LICENSE.txt' }
-
-            lintOptions { abortOnError false }
-
+        project.android.defaultConfig.versionName = project.version;
+        project.android.sourceSets.main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['src/main/resources']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
         }
+        project.android.sourceSets.test.setRoot('tests')
+        project.android.sourceSets.test {
+            java.srcDirs = ['tests/src']
+            res.srcDirs = ['tests/res']
+            assets.srcDirs = ['tests/assets']
+            resources.srcDirs = ['tests/src']
+        }
+
+        project.android.sourceSets.instrumentTest.setRoot('tests')
+        project.android.sourceSets.instrumentTest {
+            java.srcDirs = ['tests/src']
+            res.srcDirs = ['tests/res']
+            assets.srcDirs = ['tests/assets']
+            resources.srcDirs = ['tests/src']
+        }
+        project.android.sourceSets.project.android.buildTypes.release {
+            runProguard false
+            //proguardFile getDefaultProguardFile('proguard-android.txt')
+            proguardFile 'proguard-project.txt'
+            signingConfig signingConfigs.release
+        }
+        project.android.packagingOptions { exclude 'META-INF/LICENSE.txt' }
+        project.android.lintOptions { abortOnError false }
+
+
     }
 
 }
