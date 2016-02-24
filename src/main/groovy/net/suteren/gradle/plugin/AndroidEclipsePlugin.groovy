@@ -1,5 +1,5 @@
 package net.suteren.gradle.plugin
-
+import com.android.build.gradle.AppPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.plugins.ide.eclipse.EclipsePlugin
@@ -7,7 +7,7 @@ import org.gradle.plugins.ide.idea.IdeaPlugin
 
 class AndroidEclipsePlugin implements Plugin<Project> {
     void apply(Project project) {
-        project.plugins.apply("android");
+        project.plugins.apply(AppPlugin);
         project.plugins.apply(EclipsePlugin);
         project.plugins.apply(IdeaPlugin);
 
