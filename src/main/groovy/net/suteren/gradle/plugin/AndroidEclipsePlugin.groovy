@@ -14,18 +14,16 @@ class AndroidEclipsePlugin implements Plugin<Project> {
         project.plugins.apply(AppPlugin);
         project.plugins.apply(EclipsePlugin);
 
-        def EclipseModel eclipse = project.extensions.getByName("eclipse");
+        def EclipseModel eclipse = project.extensions.getByName("eclipse") as EclipseModel;
         eclipse.classpath({
-            plusConfigurations += project.configurations.compile
-            noExportConfigurations += project.configurations.compile
+            //plusConfigurations += project.configurations.compile
+            //noExportConfigurations += project.configurations.compile
 
             containers(
                     "com.android.ide.eclipse.adt.ANDROID_FRAMEWORK",
                     "com.android.ide.eclipse.adt.DEPENDENCIES",
                     "com.android.ide.eclipse.adt.LIBRARIES"
             )
-
-
             file {
                 beforeMerged { classpath ->
                     classpath.entries.removeAll() { c ->
@@ -38,7 +36,6 @@ class AndroidEclipsePlugin implements Plugin<Project> {
                         logger.warn(e.message, e)
                     }
                 }
-
                 whenMerged { classpath ->
 
                     classpath.entries -= classpath.entries.findAll() { c ->
@@ -69,22 +66,18 @@ class AndroidEclipsePlugin implements Plugin<Project> {
             }
         });
         eclipse.project({
-
             name project.name
-
             natures 'com.android.ide.eclipse.adt.AndroidNature',
                     'org.springsource.ide.eclipse.gradle.core.nature',
                     'org.eclipse.jdt.core.javanature',
                     'org.eclipse.jdt.groovy.core.groovyNature'
-
             buildCommand 'com.android.ide.eclipse.adt.ResourceManagerBuilder'
             buildCommand 'com.android.ide.eclipse.adt.PreCompilerBuilder'
             buildCommand 'org.eclipse.jdt.core.javabuilder'
             buildCommand 'com.android.ide.eclipse.adt.ApkBuilder'
-
         });
 
-        def AppExtension android = project.extensions.getByName("android");
+        def AppExtension android = project.extensions.getByName("android") as AppExtension;
         android.defaultConfig.versionName = project.version as ProductFlavor
         android.sourceSets.configure {
             main {
@@ -114,8 +107,16 @@ class AndroidEclipsePlugin implements Plugin<Project> {
         android.packagingOptions.exclude('META-INF/LICENSE.txt');
         android.lintOptions.abortOnError = false;
 
+        project.afterEvaluate {
+            eclipse.classpath({
+                plusConfigurations += project.configurations.compile
+                noExportConfigurations += project.configurations.compile
+            })
+        }
 
     }
+
+
 }
 
 
