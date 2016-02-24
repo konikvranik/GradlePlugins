@@ -5,9 +5,6 @@ apply plugin: 'java-gradle-plugin'
 apply plugin: 'maven'
 apply plugin: 'groovy'
 
-
-sourceCompatibility = 1.5
-
 repositories {
     mavenCentral()
 }
